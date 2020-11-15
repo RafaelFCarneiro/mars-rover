@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { IRoverRepository } from "../../application/Interfaces";
+import { IRoverRepository, IRoverRepositoryFilters } from "../../application/Interfaces";
 import { Rover } from "../../domain";
 
 @Injectable()
@@ -21,7 +21,7 @@ export class RoverRepository implements IRoverRepository {
     return rovers.find(r => r.getId() === id);
   }
 
-  async findAll(): Promise<Rover[]> {
+  async findAll(filters?: IRoverRepositoryFilters): Promise<Rover[]> {
     return rovers;
   }
 }

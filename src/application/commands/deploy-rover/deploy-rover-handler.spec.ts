@@ -1,7 +1,7 @@
 import { mock } from 'jest-mock-extended';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test } from '@nestjs/testing';
-import { IRoverRepository } from '../../Interfaces';
+import { DIIdentifiers, IRoverRepository } from '../../Interfaces';
 import { DeployRoverCommand } from './deploy-rover-command';
 import { DeployRoverHandler } from './deploy-rover-handler';
 import { Coordinate, Plateau, RoverLocation, Rover } from '../../../domain';
@@ -35,7 +35,7 @@ describe('DeployRoverHandler', () => {
         imports: [CqrsModule],
         providers: [
           DeployRoverHandler,
-          {  provide: 'IRoverRepository', useValue: repoMock },
+          {  provide: DIIdentifiers.IRoverRepository, useValue: repoMock },
         ],
       }).compile();
 
