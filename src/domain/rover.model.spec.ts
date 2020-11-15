@@ -16,7 +16,7 @@ describe('Rover', () => {
     });
   });
 
-  describe('Move - Success', () => {
+  describe('Move - Success | Plateau 1 1; Start Position 0 0 N ', () => {
     let rover: Rover;
 
     beforeEach(async () => {    
@@ -32,49 +32,73 @@ describe('Rover', () => {
     });
 
     it('should return position "0 0 E" after "R" move', () => {
-      rover.move(RoverMovementType.Right);
+      rover.move(RoverMovementType.R);
       expect(rover.getPosition()).toEqual("0 0 E");
     });
 
     it('should return position "0 0 W" after "L" move', () => {
-      rover.move(RoverMovementType.Left);
+      rover.move(RoverMovementType.L);
       expect(rover.getPosition()).toEqual("0 0 W");
     });
 
-    it('should return position "1 0 N" after "M" move', () => {
-      rover.move(RoverMovementType.Move);
-      expect(rover.getPosition()).toEqual("1 0 N");
+    it('should return position "0 1 N" after "M" move', () => {
+      rover.move(RoverMovementType.M);
+      expect(rover.getPosition()).toEqual("0 1 N");
     });
 
     it('should return position "0 1 E" after "R" and "M" move', () => {
       rover.move([
-        RoverMovementType.Right,
-        RoverMovementType.Move
+        RoverMovementType.R,
+        RoverMovementType.M
       ]);
-      expect(rover.getPosition()).toEqual("0 1 E");
+      expect(rover.getPosition()).toEqual("1 0 E");
     });
 
     it('should return position "0 0 W" after "L" and "M" move', () => {
       rover.move([
-        RoverMovementType.Right,
-        RoverMovementType.Move,
-        RoverMovementType.Left,
-        RoverMovementType.Left,
-        RoverMovementType.Move
+        RoverMovementType.R,
+        RoverMovementType.M,
+        RoverMovementType.L,
+        RoverMovementType.L,
+        RoverMovementType.M
       ]);
       expect(rover.getPosition()).toEqual("0 0 W");
     });
 
     it('should return position "0 0 S" after "R", "R" and "M" move', () => {
       rover.move([
-        RoverMovementType.Move,
-        RoverMovementType.Right,
-        RoverMovementType.Right,
-        RoverMovementType.Move
+        RoverMovementType.M,
+        RoverMovementType.R,
+        RoverMovementType.R,
+        RoverMovementType.M
       ]);
       expect(rover.getPosition()).toEqual("0 0 S");
     });    
   })
+
+  describe('Move - Success | Plateau 5 5; Start Position 1 2 N ', () => {
+    let rover: Rover;
+
+    beforeEach(async () => {    
+      rover = new Rover({ 
+        id,
+        location: new RoverLocation({
+          plateau: new Plateau({ upper: 5, right: 5 }),
+          coordinate: new Coordinate({ x: 1, y: 2 })
+        })
+      })
+    });
+
+    it('should return position "1 2 W" after "L" move', () => {
+      rover.move(RoverMovementType.L);
+      expect(rover.getPosition()).toEqual("1 2 W");
+    });
+
+    it('should return position "1 3 N" after "M" move', () => {
+      rover.move(RoverMovementType.M);
+      expect(rover.getPosition()).toEqual("1 3 N");
+    });
+  }) 
 
   describe('Move - Error', () => {
     let rover: Rover;
@@ -89,11 +113,11 @@ describe('Rover', () => {
     });
 
     it('should throw error after "M" move', () => {
-      expect(() => rover.move(RoverMovementType.Move)).toThrow();
+      expect(() => rover.move(RoverMovementType.M)).toThrow();
     });
 
     it('should throw error after "R" and "M" move', () => {
-      const movements = [ RoverMovementType.Right, RoverMovementType.Move ];
+      const movements = [ RoverMovementType.R, RoverMovementType.M ];
       expect(() => rover.move(movements)).toThrow()
     });
 

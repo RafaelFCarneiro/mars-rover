@@ -27,13 +27,13 @@ export class Rover {
     const movements = Array.isArray(movement) ? movement : [ movement ] ;    
     movements.forEach(mov => {
       switch (mov) {
-        case RoverMovementType.Right:
+        case RoverMovementType.R:
           this.orientation.turnRight();
           break;
-        case RoverMovementType.Left:
+        case RoverMovementType.L:
           this.orientation.turnLeft();
           break;
-        case RoverMovementType.Move:
+        case RoverMovementType.M:
           this.location.moveTo(this.orientation.getValue());
           break;          
         default:

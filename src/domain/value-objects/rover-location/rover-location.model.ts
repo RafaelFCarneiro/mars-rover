@@ -28,12 +28,12 @@ export class RoverLocation {
     const yCoord = this.coordinate.getY();
 
     const mapXValue = {
-      [RoverOrientationType.N]: xCoord + 1,
-      [RoverOrientationType.S]: xCoord - 1,
+      [RoverOrientationType.E]: xCoord + 1,
+      [RoverOrientationType.W]: xCoord - 1,
     }
     const mapYValue = {
-      [RoverOrientationType.E]: yCoord + 1,
-      [RoverOrientationType.W]: yCoord - 1,
+      [RoverOrientationType.N]: yCoord + 1,
+      [RoverOrientationType.S]: yCoord - 1,
     }
 
     const x = mapXValue[orientationType] !== undefined
