@@ -24,24 +24,8 @@ export class Rover {
     return this.id;
   }
 
-  redirectOrientation(newOrientation: RoverOrientationType) {
-    if (!newOrientation) {
-      throw new Error(`A valid orientation value must be passed!`);
-    }
-    
-    const diffOrientations = newOrientation - this.orientation.getValue();    
-    let turnTo = diffOrientations > 0 ? 'turnRight' : 'turnLeft';
-    let qtdMovs = diffOrientations;
-
-    const invertDirection = Math.abs(diffOrientations) > 2;
-    if (invertDirection) {
-      qtdMovs = 1;
-      turnTo = diffOrientations < 0 ? 'turnRight' : 'turnLeft';
-    }
-    
-    for (let i = 0; i < Math.abs(qtdMovs); i++) {
-      this.orientation[turnTo]();
-    }
+  getOrientation() {
+    return this.orientation.getValue();
   }
 
   move(movement: RoverMovementType | RoverMovementType[]) {
