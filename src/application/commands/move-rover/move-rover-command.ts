@@ -1,8 +1,6 @@
-import { RoverDto } from "../../../application/dtos";
-
 export class MoveRoverCommand {
   constructor(
-    public readonly rover: RoverDto,
+    public readonly position: { x: number, y: number, orientation: string },
     public readonly movements: string[],
   ) {} 
 }
