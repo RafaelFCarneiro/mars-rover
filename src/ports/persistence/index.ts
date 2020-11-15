@@ -1,5 +1,6 @@
+import { DIIdentifiers } from './../../application/Interfaces';
 import { RoverRepository } from './rover.repository';
 
 export const Repositories = [
-  { provide: 'IRoverRepository', useClass: RoverRepository }
+  { provide: DIIdentifiers.IRoverRepository, useClass: RoverRepository }
 ]

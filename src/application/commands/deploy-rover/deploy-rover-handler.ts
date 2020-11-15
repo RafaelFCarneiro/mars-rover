@@ -3,12 +3,12 @@ import { Inject } from "@nestjs/common";
 import { DeployRoverCommand } from "./deploy-rover-command";
 import { Coordinate, Plateau, Rover, RoverLocation } from "../../../domain";
 import { RoverDto } from './../../dtos';
-import { IRoverRepository } from "src/application/Interfaces";
+import { DIIdentifiers, IRoverRepository } from './../../Interfaces';
 
 @CommandHandler(DeployRoverCommand)
 export class DeployRoverHandler implements ICommandHandler<DeployRoverCommand> {
   constructor(
-    @Inject('IRoverRepository') private readonly repo: IRoverRepository 
+    @Inject(DIIdentifiers.IRoverRepository) private readonly repo: IRoverRepository 
   ) {}
 
   async execute(command: DeployRoverCommand) {    
