@@ -14,7 +14,7 @@ export class MoveRoverHandler implements ICommandHandler<MoveRoverCommand> {
   async execute(command: MoveRoverCommand) {
     const { position, movements } = command;
     
-    const movTypes = movements
+    let movTypes = movements
       .map(mov => RoverMovementType[mov]);
     
     const rover = (await this.repo.findAll({
@@ -25,11 +25,48 @@ export class MoveRoverHandler implements ICommandHandler<MoveRoverCommand> {
       throw new Error('Could not find a Rover on that position!');
     }
 
-    rover.redirectOrientation(RoverOrientationType[position.orientation]);
-    
+    const sendedOrientation = RoverOrientationType[position.orientation];
+    if (rover.getOrientation() !== sendedOrientation) {
+      movTypes = this.getOrientationChangeMovements({
+        initial: rover.getOrientation(),
+        final: sendedOrientation
+      }).concat(movTypes);
+    }
+
     rover.move(movTypes);
 
     return { ...rover, position: rover.getPosition() } as RoverDto;
   }
 
+  private getOrientationChangeMovements(orientations: {
+    initial: RoverOrientationType, 
+    final: RoverOrientationType
+  }) : Array<RoverMovementType> {
+    const movements: RoverMovementType[] = [];
+    const { initial, final } = orientations;
+    
+    if (!initial) {
+      throw new Error(`A valid initial orientation must be passed!`);
+    }    
+    
+    if (!final) {
+      throw new Error(`A valid final orientation must be passed!`);
+    }
+
+    const orientationsDiff = final - initial;
+    let moveTo = orientationsDiff > 0 ? RoverMovementType.R : RoverMovementType.L;
+    let qtdMovs = orientationsDiff;
+
+    const invertDirection = Math.abs(orientationsDiff) > 2;
+    if (invertDirection) {
+      qtdMovs = 1;
+      moveTo = orientationsDiff < 0 ? RoverMovementType.R : RoverMovementType.L;
+    }
+    
+    for (let i = 0; i < Math.abs(qtdMovs); i++) {
+      movements.push(moveTo);
+    }
+
+    return movements;
+  }
 } 
