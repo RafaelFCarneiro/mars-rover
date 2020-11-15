@@ -1,2 +1,2 @@
 # mars-rover
-Mars Rover - Playground
+Playground using https://nestjs.com
