@@ -57,22 +57,22 @@ describe('RoverLocation', () => {
 
     it('should move to "N" move', () => {
       roverLocation.moveTo(RoverOrientationType.N);
-      expect(roverLocation.getCoordinate().toString()).toEqual("2 1");
+      expect(roverLocation.getCoordinate().toString()).toEqual("1 2");
     });
 
     it('should move to "E" move', () => {
       roverLocation.moveTo(RoverOrientationType.E);
-      expect(roverLocation.getCoordinate().toString()).toEqual("1 2");
+      expect(roverLocation.getCoordinate().toString()).toEqual("2 1");
     });
 
     it('should move to "S" move', () => {
       roverLocation.moveTo(RoverOrientationType.S);
-      expect(roverLocation.getCoordinate().toString()).toEqual("0 1");
+      expect(roverLocation.getCoordinate().toString()).toEqual("1 0");
     });
 
     it('should move to "W" move', () => {
       roverLocation.moveTo(RoverOrientationType.W);
-      expect(roverLocation.getCoordinate().toString()).toEqual("1 0");
+      expect(roverLocation.getCoordinate().toString()).toEqual("0 1");
     });  
   })
 
