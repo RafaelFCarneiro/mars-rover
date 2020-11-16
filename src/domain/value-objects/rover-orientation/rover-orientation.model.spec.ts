@@ -14,7 +14,13 @@ describe('RoverOrientation', () => {
         value: RoverOrientationType.E
       });
       expect(roverOrientation.toString()).toEqual("E");
+    });
+
+    it('should throw error when rover orientation type is invalid', () => {
+      const value = RoverOrientationType['a'];
+      expect(() => new RoverOrientation({ value })).toThrow("Invalid orientation type!");
     });    
+
   });
 
   describe('Turn Right', () => {        

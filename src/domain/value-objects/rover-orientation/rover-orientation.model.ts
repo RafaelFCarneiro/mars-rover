@@ -6,7 +6,11 @@ export class RoverOrientation {
   constructor(data?: {
     value: RoverOrientationType
   }) {
-    this.value = data?.value || RoverOrientationType.N;
+    const hasInvalidValue = !!data && !RoverOrientationType[data.value?.toString()]; 
+    if (hasInvalidValue) {
+      throw new Error("Invalid orientation type!");  
+    }
+    this.value = data?.value || RoverOrientationType.N;    
   }
 
   getValue(): RoverOrientationType {
