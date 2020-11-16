@@ -3,15 +3,15 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { RoverDto } from './../../dtos';
 import { DIIdentifiers, IRoverRepository } from './../../Interfaces';
 import { Coordinate, RoverMovementType, RoverOrientationType } from '../../../domain';
-import { MoveRoverCommand } from './move-rover-command';
+import { MoveRoverByPositionCommand } from './move-rover-by-position-command';
 
-@CommandHandler(MoveRoverCommand)
-export class MoveRoverHandler implements ICommandHandler<MoveRoverCommand> {
+@CommandHandler(MoveRoverByPositionCommand)
+export class MoveRoverByPositionHandler implements ICommandHandler<MoveRoverByPositionCommand> {
   constructor(
     @Inject(DIIdentifiers.IRoverRepository) private readonly repo: IRoverRepository 
   ) {}
     
-  async execute(command: MoveRoverCommand) {
+  async execute(command: MoveRoverByPositionCommand) {
     const { position, movements } = command;
     
     let movTypes = movements
