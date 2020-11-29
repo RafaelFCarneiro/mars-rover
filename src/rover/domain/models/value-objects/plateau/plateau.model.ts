@@ -1,8 +1,8 @@
 import { Coordinate } from "../coordinate.model";
 
 export class Plateau {
-  private readonly maxCoordinate: Coordinate;
-  private readonly minCoordinate: Coordinate;
+  public readonly maxCoordinate: Coordinate;
+  public readonly minCoordinate: Coordinate;
 
   constructor(data?: {
     right: number,
@@ -16,16 +16,16 @@ export class Plateau {
   }
 
   boundariesOverpassed(newCoord: Coordinate) {
-    const newX = newCoord.getX();
-    const newY = newCoord.getY();
+    const newX = newCoord.x;
+    const newY = newCoord.y;
 
-    if (newX > this.maxCoordinate.getX() 
-        || newX < this.minCoordinate.getX()) {
+    if (newX > this.maxCoordinate.x 
+        || newX < this.minCoordinate.x) {
       return true;
     }
 
-    if (newY > this.maxCoordinate.getY() 
-        || newY < this.minCoordinate.getY()) {
+    if (newY > this.maxCoordinate.y 
+        || newY < this.minCoordinate.y) {
       return true;
     }
 

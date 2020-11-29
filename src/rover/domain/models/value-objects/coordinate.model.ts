@@ -1,6 +1,6 @@
 export class Coordinate {
-  private readonly x;
-  private readonly y;
+  public readonly x: number;
+  public readonly y: number;
 
   constructor(data?: {
     x?: number;
@@ -9,14 +9,6 @@ export class Coordinate {
   ) {
     this.x = data?.x || 0;
     this.y = data?.y || 0;
-  }
-
-  getX(){
-    return this.x;
-  }
-
-  getY(){
-    return this.y;
   }
   
   toString() {

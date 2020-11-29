@@ -1,4 +1,4 @@
-import { Rover } from './rover.model';
+import { NotDeployed, Rover, Errors } from './rover.model';
 import { 
   Coordinate, 
   Plateau, 
@@ -10,8 +10,38 @@ describe('Rover', () => {
   const id = 'rover1';
   
   describe('New', () => {              
+    it('should return deployed false', () => {
+      const rover = new Rover(id);           
+      expect(rover.isDeployed()).toEqual(false);
+    });
+
+    it('should return position with not deployed signalization', () => {
+      const rover = new Rover(id);           
+      expect(rover.getPosition()).toEqual(NotDeployed);
+    });
+
+    it('should throw must have valid id error with empty string parameter', () => {
+      expect(() =>  new Rover('')).toThrow(Errors.MustHaveValidId)
+    });
+
+    it('should throw must have valid id error with spaced string parameter', () => {
+      expect(() =>  new Rover('')).toThrow(Errors.MustHaveValidId)
+    });
+
+    it('should throw must have valid id error with null parameter', () => {
+      expect(() =>  new Rover('')).toThrow(Errors.MustHaveValidId)
+    });
+
+    it('should throw must have valid id error with undefined parameter', () => {
+      expect(() =>  new Rover('')).toThrow(Errors.MustHaveValidId)
+    });
+  });
+  
+
+  describe('Deploy', () => {              
     it('should return position "0 0 N"', () => {
-      const rover = new Rover({ id });           
+      const rover = new Rover(id);
+      rover.deploy();
       expect(rover.getPosition()).toEqual("0 0 N");
     });
   });
@@ -20,15 +50,15 @@ describe('Rover', () => {
     let rover: Rover;
 
     beforeEach(async () => {    
-      rover = new Rover({ 
-        id,
+      rover = new Rover(id);      
+      rover.deploy({
         location: new RoverLocation({
           plateau: new Plateau({
             upper: 1,
             right: 1
           })
         })
-      })
+      });
     });
 
     it('should return position "0 0 E" after "R" move', () => {
@@ -80,13 +110,13 @@ describe('Rover', () => {
     let rover: Rover;
 
     beforeEach(async () => {    
-      rover = new Rover({ 
-        id,
+      rover = new Rover(id);
+      rover.deploy({
         location: new RoverLocation({
           plateau: new Plateau({ upper: 5, right: 5 }),
           coordinate: new Coordinate({ x: 1, y: 2 })
         })
-      })
+      });
     });
 
     it('should return position "1 2 W" after "L" move', () => {
@@ -104,12 +134,12 @@ describe('Rover', () => {
     let rover: Rover;
 
     beforeEach(async () => {    
-      rover = new Rover({
-        id,
+      rover = new Rover(id);
+      rover.deploy({
         location: new RoverLocation({
           coordinate: new Coordinate()
         }),
-      })
+      });
     });
 
     it('should throw error after "M" move', () => {

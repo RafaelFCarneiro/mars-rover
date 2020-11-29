@@ -24,8 +24,8 @@ export class RoverLocation {
 
 
   moveTo(orientationType: RoverOrientationType) {
-    const xCoord = this.coordinate.getX();
-    const yCoord = this.coordinate.getY();
+    const xCoord = this.coordinate.x;
+    const yCoord = this.coordinate.y;
 
     const mapXValue = {
       [RoverOrientationType.E]: xCoord + 1,
