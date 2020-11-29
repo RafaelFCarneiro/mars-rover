@@ -2,8 +2,15 @@ import { Test } from '@nestjs/testing';
 import { mock } from 'jest-mock-extended';
 import { DIIdentifiers, IRoverRepository } from '../../Interfaces';
 import { MoveRoverByPositionHandler } from './move-rover-by-position-handler';
-import { Coordinate, Plateau, Rover, RoverLocation, RoverOrientation, RoverOrientationType } from './../../../domain';
 import { MoveRoverByPositionCommand } from './move-rover-by-position-command';
+import { 
+  Coordinate, 
+  Plateau, 
+  Rover, 
+  RoverLocation, 
+  RoverOrientation, 
+  RoverOrientationType 
+} from './../../../domain';
 
 describe('MoveRoverHandler', (): void => {
   const repoMock = mock<IRoverRepository>();  
@@ -115,17 +122,17 @@ describe('MoveRoverHandler', (): void => {
 });
 
 const createRoverMock = (data: {
-    coordinate: { x: number, y: number }, 
-    orientation: RoverOrientationType
-  }) => {
-    const { coordinate, orientation } = data;
-    return new Rover({
-      id: 'rover1', 
-      location: new RoverLocation({
-        plateau: new Plateau({ upper: 5, right: 5 }), 
-        coordinate: new Coordinate(coordinate)
-      }),
-      orientation: new RoverOrientation({ value: orientation })
-    });
+  coordinate: { x: number, y: number }, 
+  orientation: RoverOrientationType
+}) => {
+  const { coordinate, orientation } = data;
+  const rover = new Rover('rover1');
+  rover.deploy({
+    location: new RoverLocation({
+      plateau: new Plateau({ upper: 5, right: 5 }), 
+      coordinate: new Coordinate(coordinate)
+    }),
+    orientation: new RoverOrientation({ value: orientation })
+  })
+  return rover;
 };
-

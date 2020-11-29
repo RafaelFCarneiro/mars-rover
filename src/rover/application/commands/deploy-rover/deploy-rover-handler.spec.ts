@@ -4,7 +4,14 @@ import { Test } from '@nestjs/testing';
 import { DIIdentifiers, IRoverRepository } from '../../Interfaces';
 import { DeployRoverCommand } from './deploy-rover-command';
 import { DeployRoverHandler } from './deploy-rover-handler';
-import { Coordinate, Plateau, RoverLocation, Rover, RoverOrientationType, RoverOrientation } from '../../../domain';
+import { 
+  Coordinate, 
+  Plateau, 
+  RoverLocation, 
+  Rover, 
+  RoverOrientationType, 
+  RoverOrientation 
+} from '../../../domain';
 
 describe('DeployRoverHandler', () => {
   const repoMock = mock<IRoverRepository>();
@@ -20,8 +27,7 @@ describe('DeployRoverHandler', () => {
     });
   });
 
-  describe("Execute", () => {
-    
+  describe("Execute", () => {    
     let commandHandler: DeployRoverHandler;    
     
     beforeEach(async () => {
@@ -34,14 +40,16 @@ describe('DeployRoverHandler', () => {
       }).compile();
 
       commandHandler = moduleRef.get<DeployRoverHandler>(DeployRoverHandler);
+
+      repoMock.findById.mockReturnValue(Promise.resolve(createRoverMock(id)))
     }); 
 
     it('should deploy a rover in plateau 5 5 at position 1 2 N', async () => {      
-      const mockedRover = createRoverMock({
+      const mockedRover = createDeployedRoverMock({
         id, plateau, coordinate, orientation
       }); 
 
-      repoMock.insert.mockReturnValue(
+      repoMock.update.mockReturnValue(
         Promise.resolve(mockedRover)
       );
 
@@ -55,12 +63,12 @@ describe('DeployRoverHandler', () => {
       expect(rover.position).toEqual("1 2 N");
     }); 
     
-    it('should call RoverRepository insert method with rightfully params and "N" orientation', async () => {      
-      const mockedRover = createRoverMock({
+    it('should call RoverRepository update method with rightfully params and "N" orientation', async () => {      
+      const mockedRover = createDeployedRoverMock({
         id, plateau, coordinate, orientation
       }); 
 
-      repoMock.insert.mockReturnValue(
+      repoMock.update.mockReturnValue(
         Promise.resolve(mockedRover)
       );
 
@@ -68,17 +76,17 @@ describe('DeployRoverHandler', () => {
         new DeployRoverCommand(id, plateau, coordinate)
       );
   
-      expect(repoMock.insert).toHaveBeenCalledWith(mockedRover);
+      expect(repoMock.update).toHaveBeenCalledWith(mockedRover);
     });  
     
 
     it('should deploy a rover in plateau 5 5 at position 1 2 W', async () => {      
-      const mockedRover = createRoverMock({
+      const mockedRover = createDeployedRoverMock({
         id, plateau, coordinate,
         orientation: RoverOrientationType.W
       }); 
 
-      repoMock.insert.mockReturnValue(Promise.resolve(mockedRover));
+      repoMock.update.mockReturnValue(Promise.resolve(mockedRover));
       
       const rover = await commandHandler.execute(
         new DeployRoverCommand(id, plateau, coordinate, 'W')
@@ -90,36 +98,38 @@ describe('DeployRoverHandler', () => {
       expect(rover.position).toEqual("1 2 W");      
     });  
 
-    it('should call RoverRepository insert method with rightfully params and "W" orientation', async () => {      
-      const mockedRover = createRoverMock({
+    it('should call RoverRepository update method with rightfully params and "W" orientation', async () => {      
+      const mockedRover = createDeployedRoverMock({
         id, plateau, coordinate,
         orientation: RoverOrientationType.W
       }); 
 
-      repoMock.insert.mockReturnValue(Promise.resolve(mockedRover));
+      repoMock.update.mockReturnValue(Promise.resolve(mockedRover));
       
       const rover = await commandHandler.execute(
         new DeployRoverCommand(id, plateau, coordinate, 'W')
       );
 
-      expect(repoMock.insert).toHaveBeenCalledWith(mockedRover);
+      expect(repoMock.update).toHaveBeenCalledWith(mockedRover);
     });      
   });
 });
 
-const createRoverMock = (data: {
+const createRoverMock = (id: string) =>  new Rover(id);
+const createDeployedRoverMock = (data: {
   id: string,
   plateau: { upper: number, right: number }
   coordinate: { x: number, y: number }, 
   orientation: RoverOrientationType
 }) => {
   const { id, plateau, coordinate, orientation } = data;
-  return new Rover({
-    id,
+  const rover = createRoverMock(id);
+  rover.deploy({
     location: new RoverLocation({
       plateau: new Plateau(plateau), 
       coordinate: new Coordinate(coordinate)
     }),
     orientation: new RoverOrientation({ value: orientation })
-  });
+  })
+  return rover;
 };

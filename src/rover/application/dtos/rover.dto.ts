@@ -1,6 +1,6 @@
 export class RoverDto {
   readonly location: RoverLocationDto;
-  readonly orientation: RoverOrientationDto;
+  readonly orientation: string;
   readonly position: string;
 }
 
@@ -17,8 +17,4 @@ export class PlateauDto {
 export class CoordinateDto {
   x: number; 
   y: number;
-}
-
-export class RoverOrientationDto {
-  value: string;
 }

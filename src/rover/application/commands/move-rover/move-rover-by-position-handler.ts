@@ -2,8 +2,12 @@ import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { RoverDto } from '../../dtos';
 import { DIIdentifiers, IRoverRepository } from '../../Interfaces';
-import { Coordinate, RoverMovementType, RoverOrientationType } from '../../../domain';
 import { MoveRoverByPositionCommand } from './move-rover-by-position-command';
+import { 
+  Coordinate, 
+  RoverMovementType, 
+  RoverOrientationType 
+} from './../../../domain';
 
 @CommandHandler(MoveRoverByPositionCommand)
 export class MoveRoverByPositionHandler implements ICommandHandler<MoveRoverByPositionCommand> {
@@ -32,10 +36,17 @@ export class MoveRoverByPositionHandler implements ICommandHandler<MoveRoverByPo
         final: sendedOrientation
       }).concat(movTypes);
     }
-
+    
     rover.move(movTypes);
 
-    return { ...rover, position: rover.getPosition() } as RoverDto;
+    const updatedRover = await this.repo.update(rover);
+
+    return { 
+      ...updatedRover,
+      location: rover.getLocation(),
+      position: rover.getPosition(),
+      orientation: rover.getOrientation().toString(),
+    } as RoverDto;
   }
 
   private getOrientationChangeMovements(orientations: {

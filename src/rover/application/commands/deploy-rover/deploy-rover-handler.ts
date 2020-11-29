@@ -1,10 +1,15 @@
-import { RoverOrientationType } from './../../../domain/value-objects/rover-orientation-type.enum';
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { Inject } from "@nestjs/common";
 import { DeployRoverCommand } from "./deploy-rover-command";
-import { Coordinate, Plateau, Rover, RoverLocation, RoverOrientation } from "../../../domain";
-import { RoverDto } from '../../dtos';
 import { DIIdentifiers, IRoverRepository } from '../../Interfaces';
+import { RoverDto } from '../../dtos';
+import { 
+  Coordinate, 
+  Plateau, 
+  RoverLocation, 
+  RoverOrientation, 
+  RoverOrientationType
+} from "../../../domain";
 
 @CommandHandler(DeployRoverCommand)
 export class DeployRoverHandler implements ICommandHandler<DeployRoverCommand> {
@@ -19,16 +24,23 @@ export class DeployRoverHandler implements ICommandHandler<DeployRoverCommand> {
     const orientation = !!command?.orientation 
       ? RoverOrientationType[command?.orientation]
       : RoverOrientationType.N;
-x
-    const rover = await this.repo.insert(new Rover({
-      id: command.id,
+
+    const rover = await this.repo.findById(command.id);
+    rover.deploy({
       location: new RoverLocation({
         plateau: new Plateau({ right, upper }), 
         coordinate: new Coordinate({ x, y })
       }),
       orientation: new RoverOrientation({ value: orientation })
-    }));
+    })
 
-    return { ...rover, position: rover.getPosition() } as RoverDto;
+    const updatedRover = await this.repo.update(rover);
+
+    return { 
+      ...updatedRover,
+      location: rover.getLocation(),
+      position: rover.getPosition(),
+      orientation: rover.getOrientation().toString(),
+    } as RoverDto;
   }
 }
