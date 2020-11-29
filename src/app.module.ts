@@ -1,15 +1,9 @@
 import { Module } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
-import { RoverService } from './application';
-import { CommandHandlers } from './application/commands';
-import { Repositories } from './ports/persistence';
+import { RoverModule } from './rover/rover.module';
 
 @Module({
-  imports: [CqrsModule],
-  providers: [
-    ...CommandHandlers,
-    ...Repositories,
-    RoverService,    
+  imports: [
+    RoverModule,
   ],
 })
 export class AppModule {}

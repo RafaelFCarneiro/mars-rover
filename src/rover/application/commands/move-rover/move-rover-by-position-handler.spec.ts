@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { mock } from 'jest-mock-extended';
-import { DIIdentifiers, IRoverRepository } from './../../Interfaces';
+import { DIIdentifiers, IRoverRepository } from '../../Interfaces';
 import { MoveRoverByPositionHandler } from './move-rover-by-position-handler';
 import { Coordinate, Plateau, Rover, RoverLocation, RoverOrientation, RoverOrientationType } from './../../../domain';
 import { MoveRoverByPositionCommand } from './move-rover-by-position-command';

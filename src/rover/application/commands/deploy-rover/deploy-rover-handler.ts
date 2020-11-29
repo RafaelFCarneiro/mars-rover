@@ -3,8 +3,8 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { Inject } from "@nestjs/common";
 import { DeployRoverCommand } from "./deploy-rover-command";
 import { Coordinate, Plateau, Rover, RoverLocation, RoverOrientation } from "../../../domain";
-import { RoverDto } from './../../dtos';
-import { DIIdentifiers, IRoverRepository } from './../../Interfaces';
+import { RoverDto } from '../../dtos';
+import { DIIdentifiers, IRoverRepository } from '../../Interfaces';
 
 @CommandHandler(DeployRoverCommand)
 export class DeployRoverHandler implements ICommandHandler<DeployRoverCommand> {
