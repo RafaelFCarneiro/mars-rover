@@ -1,4 +1,6 @@
+import { RoverMovedEvent } from './../events/rover-moved.event';
 import { AggregateRoot } from '@nestjs/cqrs';
+import { RoverDeployedEvent } from '../events';
 import { 
   RoverMovementType, 
   RoverOrientation,
@@ -11,12 +13,14 @@ export class Rover extends AggregateRoot {
   
   constructor(public readonly id: string) { 
     super();   
+    
+    this.id = id;
     this.location = null;
     this.orientation = null;
-    this.id = id;
     
-    if (!this.id || !this.id.trim().length)
+    if (!this.id || !this.id.trim().length) {
       throw new Error(Errors.MustHaveValidId); 
+    }
   }
   
   deploy(data?: {
@@ -25,10 +29,14 @@ export class Rover extends AggregateRoot {
   }) {
     this.location = data?.location || new RoverLocation();
     this.orientation = data?.orientation || new RoverOrientation();
+
+    const { x, y } = this.location.getCoordinate();    
+    this.apply(new RoverDeployedEvent(this.id, 'teste', { x, y }));
   }
 
   move(movement: RoverMovementType | RoverMovementType[]) {
     const movements = Array.isArray(movement) ? movement : [ movement ] ;    
+    
     movements.forEach(mov => {
       switch (mov) {
         case RoverMovementType.R:
@@ -44,6 +52,9 @@ export class Rover extends AggregateRoot {
           throw new Error(Errors.InvalidMovement);
       }
     });
+    
+    const { x, y } = this.location.getCoordinate();    
+    this.apply(new RoverMovedEvent(this.id, 'teste', { x, y }));
   }
   
   isDeployed() {
