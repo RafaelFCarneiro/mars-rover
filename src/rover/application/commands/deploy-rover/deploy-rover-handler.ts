@@ -1,4 +1,4 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { CommandHandler, EventPublisher, ICommandHandler } from "@nestjs/cqrs";
 import { Inject } from "@nestjs/common";
 import { DeployRoverCommand } from "./deploy-rover-command";
 import { DIIdentifiers, IRoverRepository } from '../../Interfaces';
@@ -14,7 +14,8 @@ import {
 @CommandHandler(DeployRoverCommand)
 export class DeployRoverHandler implements ICommandHandler<DeployRoverCommand> {
   constructor(
-    @Inject(DIIdentifiers.IRoverRepository) private readonly repo: IRoverRepository 
+    @Inject(DIIdentifiers.IRoverRepository) private readonly repo: IRoverRepository,
+    private readonly publisher: EventPublisher,
   ) {}
 
   async execute(command: DeployRoverCommand) {    
@@ -26,16 +27,26 @@ export class DeployRoverHandler implements ICommandHandler<DeployRoverCommand> {
       : RoverOrientationType.N;
 
     const rover = await this.repo.findById(command.id);
+    
+    const notFound = !rover;
+    if (notFound) {
+      throw new Error("Rover not found");
+    };
+    
     rover.deploy({
       location: new RoverLocation({
         plateau: new Plateau({ right, upper }), 
         coordinate: new Coordinate({ x, y })
       }),
       orientation: new RoverOrientation({ value: orientation })
-    })
-
-    const updatedRover = await this.repo.update(rover);
-
+    });
+    
+    const updatedRover = this.publisher.mergeObjectContext(
+      await this.repo.update(rover)
+    );
+    
+    updatedRover.commit();
+ 
     return { 
       ...updatedRover,
       location: rover.getLocation(),
