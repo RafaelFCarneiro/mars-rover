@@ -12,12 +12,11 @@ export class Rover extends AggregateRoot {
   private orientation: RoverOrientation;
   
   constructor(public readonly id: string) { 
-    super();   
-    
-    this.id = id;
+    super();       
     this.location = null;
     this.orientation = null;
     
+    this.id = id;
     if (!this.id || !this.id.trim().length) {
       throw new Error(Errors.MustHaveValidId); 
     }
