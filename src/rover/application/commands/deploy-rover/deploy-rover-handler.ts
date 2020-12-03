@@ -6,6 +6,7 @@ import { RoverDto } from '../../dtos';
 import { 
   Coordinate, 
   Plateau, 
+  Rover, 
   RoverLocation, 
   RoverOrientation, 
   RoverOrientationType
@@ -19,24 +20,17 @@ export class DeployRoverHandler implements ICommandHandler<DeployRoverCommand> {
   ) {}
 
   async execute(command: DeployRoverCommand) {    
-    const { right, upper } =  command.plateau;
-    const { x, y } =  command.position;
+    const { id, plateau, position } = command;
     
     const orientation = !!command?.orientation 
       ? RoverOrientationType[command?.orientation]
       : RoverOrientationType.N;
 
-    const rover = await this.repo.findById(command.id);
-    
-    const notFound = !rover;
-    if (notFound) {
-      throw new Error("Rover not found");
-    };
-    
+    let rover = await this.repo.findById(id) ?? new Rover(id);      
     rover.deploy({
       location: new RoverLocation({
-        plateau: new Plateau({ right, upper }), 
-        coordinate: new Coordinate({ x, y })
+        plateau: new Plateau(plateau), 
+        coordinate: new Coordinate(position)
       }),
       orientation: new RoverOrientation({ value: orientation })
     });
