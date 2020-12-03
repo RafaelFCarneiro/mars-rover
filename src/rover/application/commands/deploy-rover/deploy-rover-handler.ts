@@ -26,7 +26,11 @@ export class DeployRoverHandler implements ICommandHandler<DeployRoverCommand> {
       ? RoverOrientationType[command?.orientation]
       : RoverOrientationType.N;
 
-    let rover = await this.repo.findById(id) ?? new Rover(id);      
+    const rover = await this.repo.findById(id) ?? new Rover(id);
+    if (rover.isDeployed()) {
+      throw new Error(DeployRoverErrors.RoverAlreadyDeployed);
+    }
+
     rover.deploy({
       location: new RoverLocation({
         plateau: new Plateau(plateau), 
@@ -48,4 +52,8 @@ export class DeployRoverHandler implements ICommandHandler<DeployRoverCommand> {
       orientation: rover.getOrientation().toString(),
     } as RoverDto;
   }
+}
+
+export const DeployRoverErrors = {
+  RoverAlreadyDeployed: 'Rover is already deployed.',
 }

@@ -3,7 +3,7 @@ import { CqrsModule, EventPublisher } from '@nestjs/cqrs';
 import { Test } from '@nestjs/testing';
 import { DIIdentifiers, IRoverRepository } from '../../Interfaces';
 import { DeployRoverCommand } from './deploy-rover-command';
-import { DeployRoverHandler } from './deploy-rover-handler';
+import { DeployRoverHandler, DeployRoverErrors } from './deploy-rover-handler';
 import { 
   Coordinate, 
   Plateau, 
@@ -41,9 +41,8 @@ describe('DeployRoverHandler', () => {
     });
   });
 
-  describe("Execute", () => {    
+  describe("Execute - Success", () => {    
     let commandHandler: DeployRoverHandler;
-    let publisher: EventPublisher;    
     
     beforeEach(async () => {
       const moduleRef = await Test.createTestingModule({
@@ -55,9 +54,6 @@ describe('DeployRoverHandler', () => {
       }).compile();
 
       commandHandler = moduleRef.get<DeployRoverHandler>(DeployRoverHandler);
-      publisher = moduleRef.get<EventPublisher>(EventPublisher);
-
-      repoMock.findById.mockReturnValue(Promise.resolve(createRoverMock(id)))
     }); 
 
     it('should deploy a rover in plateau 5 5 at position 1 2 N', async () => {      
@@ -65,9 +61,9 @@ describe('DeployRoverHandler', () => {
         id, plateau, coordinate, orientation
       }); 
 
-      repoMock.update.mockReturnValue(
-        Promise.resolve(mockedRover)
-      );
+      repoMock
+        .update
+        .mockReturnValue(Promise.resolve(mockedRover));
 
       const rover = await commandHandler.execute(
         new DeployRoverCommand(id, plateau, coordinate)
@@ -80,9 +76,9 @@ describe('DeployRoverHandler', () => {
     }); 
     
     it('should call RoverRepository update method with rightfully params and "N" orientation', async () => {      
-      repoMock.update.mockReturnValue(
-        Promise.resolve(new Rover(id))
-      );
+      repoMock
+        .update
+        .mockReturnValue(Promise.resolve(new Rover(id)));
 
       await commandHandler.execute(
         new DeployRoverCommand(id, plateau, coordinate)
@@ -99,7 +95,9 @@ describe('DeployRoverHandler', () => {
         orientation: RoverOrientationType.W
       }); 
 
-      repoMock.update.mockReturnValue(Promise.resolve(mockedRover));
+      repoMock
+        .update
+        .mockReturnValue(Promise.resolve(mockedRover));
       
       const rover = await commandHandler.execute(
         new DeployRoverCommand(id, plateau, coordinate, 'W')
@@ -112,9 +110,9 @@ describe('DeployRoverHandler', () => {
     });  
 
     it('should call RoverRepository update method with rightfully params and "W" orientation', async () => {            
-      repoMock.update.mockReturnValue(
-        Promise.resolve(new Rover(id))
-      );
+      repoMock
+        .update
+        .mockReturnValue(Promise.resolve(new Rover(id)));
       
       await commandHandler.execute(
         new DeployRoverCommand(id, plateau, coordinate, 'W')
@@ -127,6 +125,43 @@ describe('DeployRoverHandler', () => {
       expect(repoMock.update).toHaveBeenCalledWith(mockedRover);
     });   
   });
+
+  describe("Execute - Validations", () => {
+    let commandHandler: DeployRoverHandler;
+
+    const mockedValues = {
+      id: 'plateau1',
+      dimension: { height: 5, width: 5 }
+    }
+    
+    beforeEach(async () => {
+      const moduleRef = await Test.createTestingModule({
+        imports: [CqrsModule],
+        providers: [
+          DeployRoverHandler,
+          { provide: DIIdentifiers.IRoverRepository, useValue: repoMock },
+        ],
+      }).compile();
+
+      commandHandler = moduleRef.get<DeployRoverHandler>(DeployRoverHandler);      
+    });
+
+    it('should throw validation rover already deployed', async () => {
+      const mockedRover = createDeployedRoverMock({
+        id, plateau, coordinate, orientation
+      }); 
+      
+      repoMock
+        .findById
+        .mockReturnValue(Promise.resolve(mockedRover));
+
+      commandHandler
+        .execute(new DeployRoverCommand(id, plateau, coordinate))
+        .catch(error => expect(error.message)
+          .toEqual(DeployRoverErrors.RoverAlreadyDeployed));
+    });      
+  });
+  
 });
 
 const createRoverMock = (id: string) =>  new Rover(id);
@@ -145,6 +180,5 @@ const createDeployedRoverMock = (data: {
     }),
     orientation: new RoverOrientation({ value: orientation })
   })
-  const events = rover.getUncommittedEvents();
   return rover;
 };
