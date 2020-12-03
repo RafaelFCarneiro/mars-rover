@@ -1,4 +1,4 @@
-import { Errors, PlateauDimension } from './plateau-dimension.model';
+import { PlateauDimensionErrors, PlateauDimension } from './plateau-dimension.model';
 
 describe('Plateau Dimension', () => {  
   const height = 5;
@@ -27,44 +27,44 @@ describe('Plateau Dimension', () => {
   describe("New - Height validations", () => {
     it('should throw validation with height equals undefined', () => {
       expect(() =>  new PlateauDimension({ height: undefined, width }))
-        .toThrow(Errors.MustHaveValidHeight)
+        .toThrow(PlateauDimensionErrors.MustHaveValidHeight)
     });  
 
     it('should throw validation with height equals null', () => {
       expect(() =>  new PlateauDimension({ height: null, width }))
-        .toThrow(Errors.MustHaveValidHeight)
+        .toThrow(PlateauDimensionErrors.MustHaveValidHeight)
     });  
 
     it('should throw validation with height equals 0', () => {
       expect(() =>  new PlateauDimension({ height: 0, width }))
-        .toThrow(Errors.MustHaveValidHeight)
+        .toThrow(PlateauDimensionErrors.MustHaveValidHeight)
     });  
 
     it('should throw validation with width less then 0', () => {
       expect(() =>  new PlateauDimension({ height: -1, width }))
-        .toThrow(Errors.MustHaveValidHeight)
+        .toThrow(PlateauDimensionErrors.MustHaveValidHeight)
     });  
   }); 
 
   describe("New - Width validations", () =>{
     it('should throw validation with width equals undefined', () => {
       expect(() =>  new PlateauDimension({ height, width: undefined }))
-        .toThrow(Errors.MustHaveValidWidth)
+        .toThrow(PlateauDimensionErrors.MustHaveValidWidth)
     });  
 
     it('should throw validation with width equals null', () => {
       expect(() =>  new PlateauDimension({ height, width: null }))
-        .toThrow(Errors.MustHaveValidWidth)
+        .toThrow(PlateauDimensionErrors.MustHaveValidWidth)
     });  
 
     it('should throw validation with width equals 0', () => {
       expect(() =>  new PlateauDimension({ height, width: 0 }))
-        .toThrow(Errors.MustHaveValidWidth)
+        .toThrow(PlateauDimensionErrors.MustHaveValidWidth)
     });  
 
     it('should throw validation with width less then 0', () => {
       expect(() =>  new PlateauDimension({ height, width: -1 }))
-        .toThrow(Errors.MustHaveValidWidth)
+        .toThrow(PlateauDimensionErrors.MustHaveValidWidth)
     });  
   });  
 

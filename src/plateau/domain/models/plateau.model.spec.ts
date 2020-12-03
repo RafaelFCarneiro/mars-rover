@@ -1,4 +1,4 @@
-import { Errors, Plateau } from "./plateau.model";
+import { PlateauErrors, Plateau } from "./plateau.model";
 import { PlateauDimension } from "./value-objects";
 
 describe('Plateau', () => {  
@@ -26,34 +26,34 @@ describe('Plateau', () => {
   describe("New - Id validations", () => {
     it('should throw validation with id equals undefined', () => {
       expect(() =>  new Plateau({ id: undefined, dimension }))
-        .toThrow(Errors.MustHaveValidId)
+        .toThrow(PlateauErrors.MustHaveValidId)
     });  
 
     it('should throw validation with id equals null', () => {
       expect(() =>  new Plateau({ id: null, dimension }))
-        .toThrow(Errors.MustHaveValidId)
+        .toThrow(PlateauErrors.MustHaveValidId)
     });  
 
     it('should throw validation with id equals empty string', () => {
       expect(() =>  new Plateau({ id: '  ', dimension }))
-        .toThrow(Errors.MustHaveValidId)
+        .toThrow(PlateauErrors.MustHaveValidId)
     });  
   });
 
   describe("New - Dimension validations", () => {
     it('should throw validation with dimension equals undefined', () => {
       expect(() =>  new Plateau({ id, dimension: undefined }))
-        .toThrow(Errors.MustHaveDimension)
+        .toThrow(PlateauErrors.MustHaveDimension)
     });  
 
     it('should throw validation with dimension equals null', () => {
       expect(() =>  new Plateau({ id, dimension: null }))
-        .toThrow(Errors.MustHaveDimension)
+        .toThrow(PlateauErrors.MustHaveDimension)
     });  
 
     it('should throw validation with dimension equals literal object', () => {
       expect(() =>  new Plateau({ id, dimension: { height: 1, width: -1 } }))
-        .toThrow(Errors.MustHaveDimension)
+        .toThrow(PlateauErrors.MustHaveDimension)
     });  
   });    
 

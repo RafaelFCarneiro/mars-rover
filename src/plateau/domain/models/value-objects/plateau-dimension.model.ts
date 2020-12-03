@@ -10,12 +10,12 @@ export class PlateauDimension {
 
     const notHaveValidHeight = !height || isNaN(height) || height < 0;
     if (notHaveValidHeight) {
-      throw new Error(Errors.MustHaveValidHeight);
+      throw new Error(PlateauDimensionErrors.MustHaveValidHeight);
     }
 
     const notHaveValidWidth = !width || isNaN(data?.width) || width < 0;
     if (notHaveValidWidth) {
-      throw new Error(Errors.MustHaveValidWidth);
+      throw new Error(PlateauDimensionErrors.MustHaveValidWidth);
     }
 
     this.height = height;
@@ -23,7 +23,7 @@ export class PlateauDimension {
   }
 }
 
-export const Errors = {
+export const PlateauDimensionErrors = {
   MustHaveValidHeight: "A plateau dimension must have a valid height.",
   MustHaveValidWidth: "A plateau dimension must have a valid width.",
 }

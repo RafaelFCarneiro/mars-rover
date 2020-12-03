@@ -27,19 +27,19 @@ export class Plateau extends AggregateRoot{
       !(dimension instanceof PlateauDimension)
     
     if (notValidDimension) {
-      throw new Error(Errors.MustHaveDimension);
+      throw new Error(PlateauErrors.MustHaveDimension);
     }      
   }
   
   private validId(id: string) {
     const notHaveValidId = !id || !id.trim().length;
     if (notHaveValidId) {
-      throw new Error(Errors.MustHaveValidId);
+      throw new Error(PlateauErrors.MustHaveValidId);
     }
   }  
 }
 
-export const Errors = {
+export const PlateauErrors = {
   MustHaveValidId: 'Plateau must have a valid id!',
   MustHaveDimension: 'Plateau must have a dimension!',
 }
