@@ -49,8 +49,7 @@ describe('CreatePlateauHandler', () => {
       }).compile();
 
       commandHandler = moduleRef.get<CreatePlateauHandler>(CreatePlateauHandler);
-      publisher = moduleRef.get<EventPublisher>(EventPublisher);
-      
+      publisher = moduleRef.get<EventPublisher>(EventPublisher);      
     }); 
     
     it('should create a plateau with valid id and dimension', async () => {
@@ -113,9 +112,8 @@ describe('CreatePlateauHandler', () => {
     });        
   });
   
-  describe("Execute - Validation", () => {
+  describe("Execute - Validations", () => {
     let commandHandler: CreatePlateauHandler;
-    let publisher: EventPublisher;
 
     const mockedValues = {
       id: 'plateau1',
@@ -132,8 +130,6 @@ describe('CreatePlateauHandler', () => {
       }).compile();
 
       commandHandler = moduleRef.get<CreatePlateauHandler>(CreatePlateauHandler);
-      publisher = moduleRef.get<EventPublisher>(EventPublisher);
-      
     });
 
     it('should throw validation plateau already exists for the given id', async () => {
