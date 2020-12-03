@@ -1,3 +1,4 @@
+import { PlateauCreatedEvent } from "../events";
 import { PlateauErrors, Plateau } from "./plateau.model";
 import { PlateauDimension } from "./value-objects";
 
@@ -21,6 +22,15 @@ describe('Plateau', () => {
       const plateau = new Plateau({ id, dimension });
       expect(plateau.dimension).toEqual(dimension);
     });  
+
+    it('should have the PlateauCreatedEvent event', () => {
+      const plateau = new Plateau({ id, dimension });      
+      const events = plateau.getUncommittedEvents();
+      
+      expect(events.length).toBe(1);    
+      expect(events).toContainEqual(new PlateauCreatedEvent(id, dimension));
+    });  
+
   });
 
   describe("New - Id validations", () => {
