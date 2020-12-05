@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { RoverDto } from '../../dtos';
 import { DIIdentifiers, IRoverRepository } from '../../Interfaces';
-import { MoveRoverByPositionCommand } from './move-rover-by-position-command';
+import { MoveRoverByPositionCommand } from './move-rover-by-position.command';
 import { 
   Coordinate, 
   RoverMovementType, 

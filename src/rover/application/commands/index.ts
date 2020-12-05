@@ -1,7 +1,7 @@
 import { DeployRoverHandler } from './deploy-rover';
-
-export * from './deploy-rover';
+import { MoveRoverByPositionHandler } from './move-rover';
 
 export const CommandHandlers = [
-  DeployRoverHandler
+  DeployRoverHandler, 
+  MoveRoverByPositionHandler, 
 ];

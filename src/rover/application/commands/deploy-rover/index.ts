@@ -1,2 +1,2 @@
-export * from './deploy-rover-command';
-export * from './deploy-rover-handler';
+export * from './deploy-rover.command';
+export * from './deploy-rover.handler';

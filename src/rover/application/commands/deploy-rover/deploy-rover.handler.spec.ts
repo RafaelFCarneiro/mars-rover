@@ -2,8 +2,8 @@ import { mock } from 'jest-mock-extended';
 import { CqrsModule, EventPublisher } from '@nestjs/cqrs';
 import { Test } from '@nestjs/testing';
 import { DIIdentifiers, IRoverRepository } from '../../Interfaces';
-import { DeployRoverCommand } from './deploy-rover-command';
-import { DeployRoverHandler, DeployRoverErrors } from './deploy-rover-handler';
+import { DeployRoverCommand } from './deploy-rover.command';
+import { DeployRoverHandler, DeployRoverErrors } from './deploy-rover.handler';
 import { 
   Coordinate, 
   Plateau, 
