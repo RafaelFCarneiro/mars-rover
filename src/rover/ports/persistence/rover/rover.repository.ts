@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { IRoverRepository, IRoverRepositoryFilters } from "../../application/Interfaces";
-import { Rover } from "../../domain";
+import { IRoverRepository, IRoverRepositoryFilters } from "./../../../application/Interfaces";
+import { Rover } from "./../../../domain";
 
 @Injectable()
 export class RoverRepository implements IRoverRepository {
