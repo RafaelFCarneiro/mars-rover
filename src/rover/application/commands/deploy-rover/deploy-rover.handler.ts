@@ -1,46 +1,39 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from "@nestjs/cqrs";
 import { Inject } from "@nestjs/common";
-import { DeployRoverCommand } from "./deploy-rover-command";
+import { DeployRoverCommand } from "./deploy-rover.command";
 import { DIIdentifiers, IRoverRepository } from '../../Interfaces';
 import { RoverDto } from '../../dtos';
 import { 
   Coordinate, 
-  Plateau, 
   Rover, 
-  RoverLocation, 
-  RoverOrientation, 
+  RoverDeployService, 
   RoverOrientationType
 } from "../../../domain";
 
 @CommandHandler(DeployRoverCommand)
 export class DeployRoverHandler implements ICommandHandler<DeployRoverCommand> {
   constructor(
-    @Inject(DIIdentifiers.IRoverRepository) private readonly repo: IRoverRepository,
+    @Inject(DIIdentifiers.IRoverRepository) private readonly roverRepository: IRoverRepository,
     private readonly publisher: EventPublisher,
+    private readonly roverDeployService: RoverDeployService
   ) {}
 
   async execute(command: DeployRoverCommand) {    
-    const { id, plateau, position } = command;
+    const { id, plateauId, position } = command;
     
     const orientation = !!command?.orientation 
       ? RoverOrientationType[command?.orientation]
       : RoverOrientationType.N;
-
-    const rover = await this.repo.findById(id) ?? new Rover(id);
-    if (rover.isDeployed()) {
-      throw new Error(DeployRoverErrors.RoverAlreadyDeployed);
-    }
-
-    rover.deploy({
-      location: new RoverLocation({
-        plateau: new Plateau(plateau), 
-        coordinate: new Coordinate(position)
-      }),
-      orientation: new RoverOrientation({ value: orientation })
+    
+    const rover = this.roverDeployService.start({
+      rover: await this.roverRepository.findById(id) ?? new Rover(id),
+      coordinate: new Coordinate(position),
+      plateauId,
+      orientation,      
     });
     
     const updatedRover = this.publisher.mergeObjectContext(
-      await this.repo.update(rover)
+      await this.roverRepository.update(rover)
     );
     
     updatedRover.commit();

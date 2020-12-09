@@ -2,13 +2,13 @@ export class DeployRoverCommand {
   /**
    * 
    * @param id 
-   * @param plateau 
+   * @param plateauId
    * @param position 
    * @param orientation 
    */
   constructor(
     public readonly id: string,
-    public readonly plateau: { upper: number, right: number },
+    public readonly plateauId: string,
     public readonly position: { x: number, y: number },
     public readonly orientation?: string,
   ) {} 
