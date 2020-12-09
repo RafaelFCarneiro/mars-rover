@@ -4,3 +4,4 @@ export * from './plateau';
 export * from './rover-location';
 export * from './rover-movement-type.enum';
 export * from './rover-orientation-type.enum';
+export * from './rover-status-type.enum';

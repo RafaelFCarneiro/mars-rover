@@ -3,13 +3,16 @@ import { Coordinate } from '../coordinate.model';
 import { RoverOrientationType } from '../rover-orientation-type.enum';
 
 export class RoverLocation {
+  public readonly plateauId: string;
   private readonly plateau: Plateau;
   private coordinate: Coordinate;
 
   constructor(data?: {
+    plateauId: string,
     plateau?: Plateau,
     coordinate?: Coordinate
   }) {
+    this.plateauId = data.plateauId;
     this.plateau = data?.plateau || new Plateau();
     this.coordinate = data?.coordinate || new Coordinate();
   }
