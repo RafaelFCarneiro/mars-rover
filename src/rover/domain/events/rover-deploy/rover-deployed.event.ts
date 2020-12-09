@@ -9,5 +9,6 @@ export class RoverDeployedEvent {
     public readonly roverId: string,
     public readonly plateauId: string,
     public readonly coordinate: { x: number, y: number },
+    public readonly orientation?: string,
   ) {}
 }
