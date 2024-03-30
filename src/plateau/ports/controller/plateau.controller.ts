@@ -1,6 +1,6 @@
 import { BadRequestException, Body, Controller, Post } from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
-import { CreatePlateauCommand } from "../../../application";
+import { CreatePlateauCommand } from "../../application";
 import { ApiTags } from "@nestjs/swagger";
 import { PlateauDto } from "./plateau.dto";
 

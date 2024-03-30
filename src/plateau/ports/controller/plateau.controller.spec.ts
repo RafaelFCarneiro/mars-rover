@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { PlateauController } from "./plateau.controller";
 import { CommandBus, CqrsModule } from "@nestjs/cqrs";
-import { CreatePlateauCommand } from "../../../application";
+import { CreatePlateauCommand } from "../../application";
 import { BadRequestException } from "@nestjs/common";
 import {
   PlateauDimensionDto,

@@ -4,7 +4,7 @@ import {
   IsNumberString,
   IsString,
 } from "class-validator";
-import { IPlateauDimensionDto, IPlateauDto } from "../../../application";
+import { IPlateauDimensionDto, IPlateauDto } from "../../application";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class PlateauDimensionDto implements IPlateauDimensionDto {  
