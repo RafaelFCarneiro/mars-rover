@@ -15,10 +15,10 @@ export class CreatePlateauHandler implements ICommandHandler<CreatePlateauComman
   async execute(command: CreatePlateauCommand): Promise<IPlateauDto>{
     const { id, dimension } = command;
 
-    const findedPlateau = await this.repo.findById(id);    
-    const hasFound = !!findedPlateau;
+    const foundPlateau = await this.repo.findById(id);    
+    const hasFound = !!foundPlateau;
     if (hasFound) {
-      throw new Error(CreatePlateauErros.PlateauAlreadyExist);
+      throw new Error(CreatePlateauErrors.PlateauAlreadyExist);
     };
 
     const plateau = new Plateau({
@@ -39,6 +39,6 @@ export interface IPlateauDto {
   dimension: { height: number; width: number; };
 }
 
-export const CreatePlateauErros = {
+export const CreatePlateauErrors = {
   PlateauAlreadyExist: 'Plateau already exists for the given identifier',
 }

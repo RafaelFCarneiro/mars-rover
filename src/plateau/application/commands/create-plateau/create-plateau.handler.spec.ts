@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { mock } from 'jest-mock-extended';
 import { DIIdentifiers, IPlateauRepository } from '../../interfaces';
 import { CreatePlateauCommand } from './create-plateau.command';
-import { CreatePlateauHandler, CreatePlateauErros } from './create-plateau.handler';
+import { CreatePlateauHandler, CreatePlateauErrors } from './create-plateau.handler';
 import { Plateau, PlateauDimension } from './../../../domain/models';
 
 describe('CreatePlateauHandler', () => {
@@ -54,10 +54,13 @@ describe('CreatePlateauHandler', () => {
     
     it('should create a plateau with valid id and dimension', async () => {
       const { id, dimension } = mockedValues;
+      const mockedPlateau = createPlateauMock(id, dimension);
+      const commitSpy = jest.spyOn(mockedPlateau, 'commit');
+      const publishMergeObjectContextSpy = jest.spyOn(publisher, 'mergeObjectContext');
 
       repoMock
         .insert
-        .mockReturnValue(Promise.resolve(createPlateauMock(id, dimension)));
+        .mockReturnValue(Promise.resolve(mockedPlateau));
 
       const plateau = await commandHandler
         .execute(new CreatePlateauCommand(id, dimension));
@@ -65,6 +68,9 @@ describe('CreatePlateauHandler', () => {
       expect(plateau).toBeDefined();
       expect(plateau.id).toEqual(id);
       expect(plateau.dimension).toEqual(dimension);
+      expect(publishMergeObjectContextSpy).toBeCalled();
+      expect(commitSpy).toBeCalled();
+      expect(repoMock.insert).toBeCalledWith(createPlateauMock(id, dimension));
     });
 
     it('should call findById method of IPlateauRepository with rightfully id param', () => {
@@ -142,7 +148,7 @@ describe('CreatePlateauHandler', () => {
       commandHandler
         .execute(new CreatePlateauCommand(id, dimension))
         .catch(error => expect(error.message)
-          .toEqual(CreatePlateauErros.PlateauAlreadyExist))      
+          .toEqual(CreatePlateauErrors.PlateauAlreadyExist))      
     });      
   });
   
