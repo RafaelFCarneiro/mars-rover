@@ -1,22 +1,26 @@
-import { BadRequestException, Body, Controller, HttpCode, Post, Res } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Post } from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
-import { CreatePlateauCommand, IPlateauDto } from "../../../application";
+import { CreatePlateauCommand } from "../../../application";
+import { ApiTags } from "@nestjs/swagger";
+import { PlateauDto } from "./plateau.dto";
 
+@ApiTags("Plateau")
 @Controller("plateau")
 export class PlateauController {
   constructor(private commandBus: CommandBus) {}
 
   @Post()
-  createPlateau(@Body() body: IPlateauDto) {
+  async createPlateau(@Body() body: PlateauDto) {
     const { id, dimension } = body;
     const { width, height } = dimension;
-        
+
     try {
-      return this.commandBus.execute(
+      return await this.commandBus.execute(
         new CreatePlateauCommand(id, { width, height })
       );
     } catch (error) {
-      throw new BadRequestException(error);      
+      console.error(error);
+      throw new BadRequestException(error.message);
     }
   }
 }
