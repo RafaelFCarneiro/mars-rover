@@ -18,11 +18,7 @@ export class CreatePlateauHandler
   async execute(command: CreatePlateauCommand): Promise<IPlateauDto> {
     const { id, dimension } = command;
 
-    const foundPlateau = await this.repo.findById(id);
-    const hasFound = !!foundPlateau;
-    if (hasFound) {
-      throw new Error(CreatePlateauErrors.PlateauAlreadyExist);
-    }
+    await this.validate(id);
 
     const plateau = new Plateau({
       id,
@@ -35,6 +31,14 @@ export class CreatePlateauHandler
 
     insertedPlateau.commit();
     return { ...insertedPlateau } as IPlateauDto;
+  }
+
+  private async validate(id: string) {
+    const foundPlateau = await this.repo.findById(id);
+    const hasFound = !!foundPlateau;
+    if (hasFound) {
+      throw new Error(CreatePlateauErrors.PlateauAlreadyExist);
+    }
   }
 }
 
