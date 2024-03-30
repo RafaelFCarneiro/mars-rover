@@ -11,12 +11,12 @@ export class PlateauDimensionDto implements IPlateauDimensionDto {
   @ApiProperty()
   @IsNumberString()
   @IsNotEmpty()
-  width: number;
+  width: any;
 
   @ApiProperty()
   @IsNumberString()
   @IsNotEmpty()
-  height: number;
+  height: any;
 }
 
 export class PlateauDto implements IPlateauDto {
