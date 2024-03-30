@@ -2,6 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { PlateauController } from "./plateau.controller";
 import { CommandBus, CqrsModule } from "@nestjs/cqrs";
 import { CreatePlateauCommand, IPlateauDto } from "../../../application";
+import { BadRequestException } from "@nestjs/common";
 
 describe("PlateauController", () => {
   let controller: PlateauController;
@@ -42,5 +43,17 @@ describe("PlateauController", () => {
       id,
       dimension,
     });
+  });
+
+  it("should return bad request if handler throws error", async () => {
+    const errorMsg = "test error";
+    
+    commandBus.execute = jest.fn().mockImplementation(() => {
+      throw new Error(errorMsg);
+    });
+
+    expect(() => controller.createPlateau(mockedPlateauValues)).toThrow(
+      new BadRequestException(errorMsg)
+    );
   });
 });
