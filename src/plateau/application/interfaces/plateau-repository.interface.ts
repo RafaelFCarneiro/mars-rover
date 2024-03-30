@@ -1,4 +1,4 @@
-import { Plateau } from "./../../domain/models";
+import { Plateau } from "./../../domain";
 
 export interface IPlateauRepository {
   insert(Plateau: Plateau): Promise<Plateau>
@@ -8,5 +8,5 @@ export interface IPlateauRepository {
 }
 
 export interface IPlateauRepositoryFilters {
-  
+  id: string;
 }
