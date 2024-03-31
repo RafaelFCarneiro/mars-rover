@@ -2,69 +2,84 @@ import { PlateauCreatedEvent } from "../events";
 import { PlateauErrors, Plateau } from "./plateau.model";
 import { PlateauDimension } from "./value-objects";
 
-describe('Plateau', () => {  
-  const id = 'plateau1';
+describe("Plateau", () => {
+  const id = "6b2ee66c-5a09-49b9-a2e6-5eb75be54972";
+  const name = "plateau_name";
   const dimension = new PlateauDimension({
-    height: 5, width: 5
+    height: 5,
+    width: 5,
   });
 
   describe("New - Success", () => {
-    it('should be defined', () => {
-      expect(new Plateau({ id, dimension })).toBeDefined();
-    });  
+    it("should be defined", () => {
+      expect(new Plateau({ id, name, dimension })).toBeDefined();
+    });
 
-    it('should have the defined id', () => {
-      const plateau = new Plateau({ id, dimension });      
-      expect(plateau.id).toBe(id);
-    });  
-
-    it('should have the defined dimension', () => {
-      const plateau = new Plateau({ id, dimension });
-      expect(plateau.dimension).toEqual(dimension);
-    });  
-
-    it('should have the PlateauCreatedEvent event', () => {
-      const plateau = new Plateau({ id, dimension });      
-      const events = plateau.getUncommittedEvents();
+    it("should have the defined id, name and dimension", () => {
+      const plateau = new Plateau({ id, name, dimension });
       
-      expect(events.length).toBe(1);    
-      expect(events).toContainEqual(new PlateauCreatedEvent(id, dimension));
-    });  
+      expect(plateau.id).toBe(id);
+      expect(plateau.name).toBe(name);
+      expect(plateau.dimension).toEqual(dimension);
+    });
 
+    it("should have the PlateauCreatedEvent event", () => {
+      const plateau = new Plateau({ id, name, dimension });
+      const events = plateau.getUncommittedEvents();
+
+      expect(events.length).toBe(1);
+      expect(events).toContainEqual(
+        new PlateauCreatedEvent(id, name, dimension)
+      );
+    });
   });
 
-  describe("New - Id validations", () => {
-    it('should throw validation with id equals undefined', () => {
-      expect(() =>  new Plateau({ id: undefined, dimension }))
-        .toThrow(PlateauErrors.MustHaveValidId)
-    });  
+  describe("New - id validations", () => {
+    it("should throw validation with name is empty", () => {
+      expect(() => new Plateau({ id: undefined, name, dimension })).toThrow(
+        PlateauErrors.MustHaveValidId
+      );
+      expect(() => new Plateau({ id: null, name, dimension })).toThrow(
+        PlateauErrors.MustHaveValidId
+      );
+      expect(() => new Plateau({ id: "  ", name, dimension })).toThrow(
+        PlateauErrors.MustHaveValidId
+      );
+      expect(() => new Plateau({ id: "", name, dimension })).toThrow(
+        PlateauErrors.MustHaveValidId
+      );
+    });
+  });
 
-    it('should throw validation with id equals null', () => {
-      expect(() =>  new Plateau({ id: null, dimension }))
-        .toThrow(PlateauErrors.MustHaveValidId)
-    });  
-
-    it('should throw validation with id equals empty string', () => {
-      expect(() =>  new Plateau({ id: '  ', dimension }))
-        .toThrow(PlateauErrors.MustHaveValidId)
-    });  
+  describe("New - name validations", () => {
+    it("should throw validation with name is empty", () => {
+      expect(() => new Plateau({ id, name: undefined, dimension })).toThrow(
+        PlateauErrors.MustHaveValidName
+      );
+      expect(() => new Plateau({ id, name: null, dimension })).toThrow(
+        PlateauErrors.MustHaveValidName
+      );
+      expect(() => new Plateau({ id, name: "  ", dimension })).toThrow(
+        PlateauErrors.MustHaveValidName
+      );
+      expect(() => new Plateau({ id, name: "", dimension })).toThrow(
+        PlateauErrors.MustHaveValidName
+      );
+    });
   });
 
   describe("New - Dimension validations", () => {
-    it('should throw validation with dimension equals undefined', () => {
-      expect(() =>  new Plateau({ id, dimension: undefined }))
-        .toThrow(PlateauErrors.MustHaveDimension)
-    });  
+    it("should throw validation with dimension is empty", () => {
+      expect(() => new Plateau({ id, name, dimension: undefined })).toThrow(
+        PlateauErrors.MustHaveDimension
+      );
+      expect(() => new Plateau({ id, name, dimension: null })).toThrow(
+        PlateauErrors.MustHaveDimension
+      );
+      expect(
+        () => new Plateau({ id, name, dimension: { height: 1, width: -1 } })
+      ).toThrow(PlateauErrors.MustHaveDimension);
+    });
 
-    it('should throw validation with dimension equals null', () => {
-      expect(() =>  new Plateau({ id, dimension: null }))
-        .toThrow(PlateauErrors.MustHaveDimension)
-    });  
-
-    it('should throw validation with dimension equals literal object', () => {
-      expect(() =>  new Plateau({ id, dimension: { height: 1, width: -1 } }))
-        .toThrow(PlateauErrors.MustHaveDimension)
-    });  
-  });    
-
+  });
 });

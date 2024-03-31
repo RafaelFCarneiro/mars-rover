@@ -22,7 +22,15 @@ export class PlateauRepository implements IPlateauRepository {
   }
 
   async findAll(filters?: IPlateauRepositoryFilters): Promise<Plateau[]> {
-    return plateaus;
+    return plateaus.filter(r => {
+      if (filters?.id && r.id === filters.id) {
+        return true;
+      }
+      if (filters?.name && r.name === filters.name) {
+        return true;
+      }
+      return false;
+    });
   }
 }
 

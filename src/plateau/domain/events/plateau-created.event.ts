@@ -1,11 +1,13 @@
 export class PlateauCreatedEvent {
   /**
    * 
-   * @param plateauId Plateau identifer
+   * @param id Plateau identifier
+   * @param name Plateau name
    * @param dimension Plateau dimensions
    */
   constructor(
-    public readonly plateauId: string,
+    public readonly id: string,
+    public readonly name: string,
     public readonly dimension: { height: number, width: number },
   ) {}
 }

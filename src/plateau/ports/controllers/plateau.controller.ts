@@ -11,12 +11,12 @@ export class PlateauController {
 
   @Post()
   async createPlateau(@Body() body: PlateauDto) {
-    const { id, dimension } = body;
+    const { name, dimension } = body;
     const { width, height } = dimension;
 
     try {
       return await this.commandBus.execute(
-        new CreatePlateauCommand(id, { width, height })
+        new CreatePlateauCommand(name, { width, height })
       );
     } catch (error) {
       console.error(error);

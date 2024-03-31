@@ -13,7 +13,7 @@ describe("PlateauController", () => {
   let commandBus: CommandBus;
 
   const mockedPlateauValues: PlateauDto = {
-    id: "plateau1",
+    name: "plateau1",
     dimension: {
       width: 5,
       height: 5,
@@ -35,16 +35,16 @@ describe("PlateauController", () => {
   });
 
   it("should create a plateau", async () => {
-    const { id, dimension } = mockedPlateauValues;
+    const { name, dimension } = mockedPlateauValues;
 
-    commandBus.execute = jest.fn().mockReturnValue({ id, dimension });
+    commandBus.execute = jest.fn().mockReturnValue({ name, dimension });
     const result = await controller.createPlateau(mockedPlateauValues);
 
     expect(commandBus.execute).toBeCalledWith(
-      new CreatePlateauCommand(id, dimension)
+      new CreatePlateauCommand(name, dimension)
     );
     expect(result).toEqual({
-      id,
+      name,
       dimension,
     });
   });

@@ -4,6 +4,7 @@ import { CreatePlateauCommand } from "./create-plateau.command";
 import { Plateau, PlateauDimension } from "./../../../domain/models";
 import { DIIdentifiers, IPlateauRepository } from "../../interfaces";
 import { IPlateauDto } from "../../interfaces/plateau-dto.interface";
+import { v4 as uuid } from "uuid";
 
 @CommandHandler(CreatePlateauCommand)
 export class CreatePlateauHandler
@@ -16,12 +17,13 @@ export class CreatePlateauHandler
   ) {}
 
   async execute(command: CreatePlateauCommand): Promise<IPlateauDto> {
-    const { id, dimension } = command;
+    const { name, dimension } = command;
 
-    await this.validate(id);
+    await this.validate(name);
 
     const plateau = new Plateau({
-      id,
+      id: uuid(),
+      name,
       dimension: new PlateauDimension(dimension),
     });
 
@@ -33,9 +35,9 @@ export class CreatePlateauHandler
     return { ...insertedPlateau } as IPlateauDto;
   }
 
-  private async validate(id: string) {
-    const foundPlateau = await this.repo.findById(id);
-    const hasFound = !!foundPlateau;
+  private async validate(name: string) {
+    const foundPlateau = await this.repo.findAll({ name });
+    const hasFound = !!foundPlateau.length;
     if (hasFound) {
       throw new Error(CreatePlateauErrors.PlateauAlreadyExist);
     }
@@ -43,5 +45,5 @@ export class CreatePlateauHandler
 }
 
 export const CreatePlateauErrors = {
-  PlateauAlreadyExist: "Plateau already exists for the given identifier",
+  PlateauAlreadyExist: "Plateau already exists for the given name",
 };

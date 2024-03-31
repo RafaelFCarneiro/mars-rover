@@ -1,5 +1,6 @@
 export interface IPlateauDto {
   id: string;
+  name: string;
   dimension: IPlateauDimensionDto;
 }
 

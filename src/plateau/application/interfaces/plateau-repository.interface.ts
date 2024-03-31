@@ -8,5 +8,6 @@ export interface IPlateauRepository {
 }
 
 export interface IPlateauRepositoryFilters {
-  id: string;
+  id?: string;
+  name?: string;
 }

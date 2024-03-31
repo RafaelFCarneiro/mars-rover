@@ -4,26 +4,31 @@ import {
   IsNumberString,
   IsString,
 } from "class-validator";
-import { IPlateauDimensionDto, IPlateauDto } from "../../application";
+import { CreatePlateauCommand } from "../../application";
 import { ApiProperty } from "@nestjs/swagger";
 
-export class PlateauDimensionDto implements IPlateauDimensionDto {  
-  @ApiProperty()
-  @IsNumberString()
-  @IsNotEmpty()
-  width: any;
+export class PlateauDimensionDto {  
+  constructor(width: any, height: any) {
+    this.width = width;
+    this.height = height;
+  }
 
   @ApiProperty()
   @IsNumberString()
   @IsNotEmpty()
-  height: any;
+  width: number;
+
+  @ApiProperty()
+  @IsNumberString()
+  @IsNotEmpty()
+  height: number;
 }
 
-export class PlateauDto implements IPlateauDto {
+export class PlateauDto extends CreatePlateauCommand {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  id: string;
+  name: string;
 
   @ApiProperty()
   @IsNotEmptyObject()

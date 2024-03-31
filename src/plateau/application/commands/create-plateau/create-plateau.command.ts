@@ -1,11 +1,11 @@
 export class CreatePlateauCommand {
   /**
    * 
-   * @param id 
+   * @param name 
    * @param dimension 
    */
   constructor(
-    public readonly id: string,
+    public readonly name: string,
     public readonly dimension: { height: number, width: number },
   ) {
   }

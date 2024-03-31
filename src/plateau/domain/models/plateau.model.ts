@@ -1,25 +1,27 @@
 import { PlateauCreatedEvent } from './../events/plateau-created.event';
 import { AggregateRoot } from "@nestjs/cqrs";
 import { PlateauDimension } from "./value-objects";
+import { IPlateauDto } from 'src/plateau/application';
+import { isUUID } from 'class-validator';
 
 export class Plateau extends AggregateRoot{    
-  public readonly id: string
+  public readonly id: string;
   public readonly dimension: PlateauDimension;
+  public readonly name: string;
   
-  constructor(data: {
-    id: string,
-    dimension: PlateauDimension
-  }) {
+  constructor(data: IPlateauDto) {
     super();
-    const { id, dimension } = data;
+    const { id, dimension, name } = data;
     
     this.validId(id);
+    this.validName(name);
     this.validDimensionRef(dimension);
 
     this.id = id;
     this.dimension = dimension;
+    this.name = name;
 
-    this.apply(new PlateauCreatedEvent(this.id, this.dimension))
+    this.apply(new PlateauCreatedEvent(this.id, this.name, this.dimension))
   }
 
   private validDimensionRef(dimension: PlateauDimension) {
@@ -31,9 +33,14 @@ export class Plateau extends AggregateRoot{
     }      
   }
   
+  private validName(name: string) {
+    if (IsEmpty(name)) {
+      throw new Error(PlateauErrors.MustHaveValidName);
+    }
+  }  
+  
   private validId(id: string) {
-    const notHaveValidId = !id || !id.trim().length;
-    if (notHaveValidId) {
+    if (IsEmpty(id) || !isUUID(id)) {
       throw new Error(PlateauErrors.MustHaveValidId);
     }
   }  
@@ -41,5 +48,10 @@ export class Plateau extends AggregateRoot{
 
 export const PlateauErrors = {
   MustHaveValidId: 'Plateau must have a valid id!',
+  MustHaveValidName: 'Plateau must have a valid name!',
   MustHaveDimension: 'Plateau must have a dimension!',
+}
+
+function IsEmpty(name: string) {
+  return !name || !name.trim().length;
 }
