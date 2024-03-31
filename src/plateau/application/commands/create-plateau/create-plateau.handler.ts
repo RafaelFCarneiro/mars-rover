@@ -36,9 +36,8 @@ export class CreatePlateauHandler
   }
 
   private async validate(name: string) {
-    const foundPlateau = await this.repo.findAll({ name });
-    const hasFound = !!foundPlateau.length;
-    if (hasFound) {
+    const foundPlateau = await this.repo.find({ name });
+    if (!!foundPlateau) {
       throw new Error(CreatePlateauErrors.PlateauAlreadyExist);
     }
   }

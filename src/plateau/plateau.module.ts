@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PlateauController } from './ports/controllers/plateau.controller';
-import { CommandHandlers } from './application';
+import { CommandHandlers, QueryHandlers } from './application';
 import { PlateauRepositories } from './ports';
 import { CqrsModule } from '@nestjs/cqrs';
 
@@ -9,6 +9,7 @@ import { CqrsModule } from '@nestjs/cqrs';
     controllers: [PlateauController],
     providers: [
         ...CommandHandlers,
+        ...QueryHandlers,
         ...PlateauRepositories
     ],
 })

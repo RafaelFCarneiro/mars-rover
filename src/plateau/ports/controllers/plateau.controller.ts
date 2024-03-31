@@ -1,13 +1,29 @@
-import { BadRequestException, Body, Controller, Post } from "@nestjs/common";
-import { CommandBus } from "@nestjs/cqrs";
-import { CreatePlateauCommand } from "../../application";
-import { ApiTags } from "@nestjs/swagger";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+} from "@nestjs/common";
+import { CommandBus, QueryBus } from "@nestjs/cqrs";
+import { CreatePlateauCommand, SearchPlateauQuery } from "../../application";
+import { ApiQuery, ApiTags } from "@nestjs/swagger";
 import { PlateauDto } from "./plateau.dto";
 
 @ApiTags("Plateau")
 @Controller("plateau")
 export class PlateauController {
-  constructor(private commandBus: CommandBus) {}
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus
+  ) {}
+
+  @Get()
+  @ApiQuery({ name: 'name', required: false, type: String })
+  async getPlateaus(@Query("name") name?: string) {
+    return this.queryBus.execute(new SearchPlateauQuery(name));
+  }
 
   @Post()
   async createPlateau(@Body() body: PlateauDto) {

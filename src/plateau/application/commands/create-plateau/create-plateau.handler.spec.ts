@@ -9,6 +9,7 @@ import {
 } from "./create-plateau.handler";
 import { Plateau, PlateauDimension } from "./../../../domain/models";
 import { v4 as uuid } from "uuid";
+import { SearchPlateauHandler } from "../../queries";
 
 jest.mock("uuid", () => ({ v4: () => "6b2ee66c-5a09-49b9-a2e6-5eb75be54972" }));
 
@@ -28,7 +29,8 @@ describe("CreatePlateauHandler", () => {
         imports: [CqrsModule],
         providers: [
           CreatePlateauHandler,
-          { provide: DIIdentifiers.IPlateauRepository, useValue: repoMock },
+          SearchPlateauHandler,
+          { provide: DIIdentifiers.IPlateauRepository, useValue: repoMock },                    
         ],
       }).compile();
 
@@ -57,7 +59,7 @@ describe("CreatePlateauHandler", () => {
         moduleRef.get<CreatePlateauHandler>(CreatePlateauHandler);
       publisher = moduleRef.get<EventPublisher>(EventPublisher);
 
-      repoMock.findAll.mockReturnValue(Promise.resolve([]));
+      repoMock.find.mockReturnValue(Promise.resolve(null));
     });
 
     it("should create a plateau with valid id, name and dimension", async () => {
@@ -95,7 +97,7 @@ describe("CreatePlateauHandler", () => {
 
       commandHandler.execute(new CreatePlateauCommand(name, dimension));
 
-      expect(repoMock.findAll).toHaveBeenCalledWith({ name });
+      expect(repoMock.find).toHaveBeenCalledWith({ name });
     });
 
     it("should call insert method of IPlateauRepository with rightfully Plateau param", () => {
@@ -147,8 +149,8 @@ describe("CreatePlateauHandler", () => {
     it("should throw validation plateau already exists for the given id", async () => {
       const { name, dimension } = mockedValues;
 
-      repoMock.findAll.mockReturnValue(
-        Promise.resolve([createPlateauMock(mockedValues)])
+      repoMock.find.mockReturnValue(
+        Promise.resolve(createPlateauMock(mockedValues))
       );
 
       await expect(async () => commandHandler.execute(new CreatePlateauCommand(name, dimension))
